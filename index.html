@@ -1,40 +1,17 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Black Hole Project</title>
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
 <style>
 
 body{
+margin:0;
+overflow:hidden;
 background:black;
-display:flex;
-justify-content:center;
-align-items:center;
-height:100vh;
 }
 
-.blackhole{
-width:200px;
-height:200px;
-border-radius:50%;
-background:black;
-box-shadow:0 0 60px orange,0 0 120px red;
-position:relative;
-}
-
-.disk{
-position:absolute;
-width:300px;
-height:20px;
-background:linear-gradient(90deg,orange,red,yellow);
-top:90px;
-left:-50px;
-border-radius:50%;
-animation:spin 3s linear infinite;
-}
-
-@keyframes spin{
-0%{transform:rotate(0deg);}
-100%{transform:rotate(360deg);}
+canvas{
+display:block;
 }
 
 </style>
@@ -42,9 +19,101 @@ animation:spin 3s linear infinite;
 
 <body>
 
-<div class="blackhole">
-<div class="disk"></div>
-</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
+
+<script>
+
+const scene = new THREE.Scene()
+
+const camera = new THREE.PerspectiveCamera(
+75,
+window.innerWidth/window.innerHeight,
+0.1,
+1000
+)
+
+const renderer = new THREE.WebGLRenderer({antialias:true})
+renderer.setSize(window.innerWidth,window.innerHeight)
+document.body.appendChild(renderer.domElement)
+
+camera.position.z = 5
+
+
+// star field
+const starGeo = new THREE.BufferGeometry()
+const starCount = 2000
+
+const pos = []
+
+for(let i=0;i<starCount;i++){
+
+pos.push(
+(Math.random()-0.5)*50,
+(Math.random()-0.5)*50,
+(Math.random()-0.5)*50
+)
+
+}
+
+starGeo.setAttribute(
+"position",
+new THREE.Float32BufferAttribute(pos,3)
+)
+
+const starMat = new THREE.PointsMaterial({
+color:0xffffff,
+size:0.1
+})
+
+const stars = new THREE.Points(starGeo,starMat)
+scene.add(stars)
+
+
+// black hole sphere
+const geo = new THREE.SphereGeometry(1.2,64,64)
+
+const material = new THREE.MeshPhysicalMaterial({
+color:0x000000,
+metalness:0,
+roughness:0,
+transmission:1,
+thickness:2,
+clearcoat:1,
+clearcoatRoughness:0,
+})
+
+const blackHole = new THREE.Mesh(geo,material)
+scene.add(blackHole)
+
+
+// glowing ring
+const ringGeo = new THREE.TorusGeometry(1.8,0.2,16,100)
+
+const ringMat = new THREE.MeshBasicMaterial({
+color:0xff8800
+})
+
+const ring = new THREE.Mesh(ringGeo,ringMat)
+scene.add(ring)
+
+
+
+function animate(){
+
+requestAnimationFrame(animate)
+
+stars.rotation.y += 0.0007
+
+ring.rotation.x += 0.01
+ring.rotation.y += 0.01
+
+renderer.render(scene,camera)
+
+}
+
+animate()
+
+</script>
 
 </body>
 </html>
