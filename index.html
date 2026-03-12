@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Black Hole Project</title>
+<style>
+
+body{
+background:black;
+display:flex;
+justify-content:center;
+align-items:center;
+height:100vh;
+}
+
+.blackhole{
+width:200px;
+height:200px;
+border-radius:50%;
+background:black;
+box-shadow:0 0 60px orange,0 0 120px red;
+position:relative;
+}
+
+.disk{
+position:absolute;
+width:300px;
+height:20px;
+background:linear-gradient(90deg,orange,red,yellow);
+top:90px;
+left:-50px;
+border-radius:50%;
+animation:spin 3s linear infinite;
+}
+
+@keyframes spin{
+0%{transform:rotate(0deg);}
+100%{transform:rotate(360deg);}
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="blackhole">
+<div class="disk"></div>
+</div>
+
+</body>
+</html>
